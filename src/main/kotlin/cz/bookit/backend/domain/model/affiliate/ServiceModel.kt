@@ -4,13 +4,13 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "services")
-data class Service(
+data class ServiceModel(
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long,
     val affiliateId: Long,
     val affiliatePersonId: Long,
     val serviceName: String,
-    val serviceDuration: Long,
+    val serviceDurationInMinutes: Long,
     val servicePrice: Double,
 )

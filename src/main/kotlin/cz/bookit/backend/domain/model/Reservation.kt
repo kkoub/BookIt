@@ -6,7 +6,7 @@ import javax.persistence.*
 @Table(name = "reservations")
 data class Reservation(
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long?,
     val userId: Long,
     val affiliateId: Long,

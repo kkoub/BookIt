@@ -14,10 +14,8 @@ data class CompanyService(
     private val affiliateRepository: AffiliateRepository,
 ) {
 
-    fun getAllCompanyAffiliates(companyId: Long): List<Affiliate> {
-        val affiliatesForCompany = affiliateRepository.findByCompany_Id(companyId)
-        return affiliatesForCompany.ifEmpty { throw ResponseStatusException(HttpStatus.NOT_FOUND) }
-    }
+    fun getAllCompanyAffiliates(companyId: Long): List<Affiliate> =
+        affiliateRepository.findByCompany_Id(companyId)
 
     fun createCompany(company: Company): Company {
         val doesCompanyAlreadyExist = companyRepository.existsById(company.id)

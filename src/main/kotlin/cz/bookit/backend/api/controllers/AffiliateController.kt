@@ -7,11 +7,13 @@ import cz.bookit.backend.data.services.CompanyService
 import cz.bookit.backend.domain.model.UserUuid
 import cz.bookit.backend.domain.model.affiliate.Affiliate
 import cz.bookit.backend.domain.model.affiliate.AffiliateMember
+import cz.bookit.backend.domain.model.affiliate.ServiceModel
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.util.ObjectUtils
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
@@ -22,18 +24,7 @@ data class AffiliateController(
     private val companyService: CompanyService,
 ) {
 
-    @GetMapping("/company/{companyId}/affiliates")
-    fun getCompanyAffiliates(
-        @RequestHeader(UserIdHeader) userId : UserUuid,
-        @PathVariable companyId: Long
-    ): ResponseEntity<List<Affiliate>> {
-        return ResponseEntity(
-            companyService.getAllCompanyAffiliates(companyId),
-            HttpStatus.OK
-        )
-    }
-
-    @PutMapping("/affiliate")
+    @PostMapping("/affiliate")
     fun createAffiliate(
         @RequestHeader(UserIdHeader) userId : UserUuid,
         @RequestBody affiliate: Affiliate
@@ -46,7 +37,7 @@ data class AffiliateController(
         return ResponseEntity(persistedAffiliate, HttpStatus.OK)
     }
 
-    @PutMapping("/affiliate/member")
+    @PostMapping("/affiliate/member")
     fun createAffiliateMember(
         @RequestHeader(UserIdHeader) userId : UserUuid,
         @RequestBody affiliateMember: AffiliateMember
@@ -57,5 +48,26 @@ data class AffiliateController(
         }
 
         return ResponseEntity(null, HttpStatus.CREATED)
+    }
+
+    @GetMapping("/affiliate/{affiliateId}/services")
+    fun getAffiliateServices(
+        @RequestHeader(UserIdHeader) userId : UserUuid,
+        @PathVariable affiliateId: Long
+    ): ResponseEntity<List<ServiceModel>> =
+        ResponseEntity(affiliateService.getAffiliateServices(affiliateId), HttpStatus.OK)
+
+    @PutMapping("/affiliate/{affiliateId}/services")
+    fun insertNewAffiliateService(
+        @RequestHeader(UserIdHeader) userId : UserUuid,
+        @PathVariable affiliateId: Long,
+        @RequestBody service: ServiceModel,
+    ): ResponseEntity<ServiceModel> {
+        val persistedService = affiliateService.insertNewAffiliateService(service.copy(affiliateId = affiliateId))
+        if (ObjectUtils.isEmpty(persistedService)) {
+            return ResponseEntity<ServiceModel>(HttpStatus.BAD_REQUEST)
+        }
+
+        return ResponseEntity(null, HttpStatus.OK)
     }
 }

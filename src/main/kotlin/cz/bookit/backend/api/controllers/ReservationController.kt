@@ -8,7 +8,10 @@ import cz.bookit.backend.domain.model.UserUuid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.util.ObjectUtils
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
@@ -23,7 +26,7 @@ data class ReservationController(
         return ResponseEntity(reservationService.getReservations(), HttpStatus.OK)
     }
 
-    @PutMapping("/reservation/create")
+    @PostMapping("/reservation/create")
     fun createReservation(
         @RequestHeader(UserIdHeader) userId : UserUuid,
         @RequestBody reservation: Reservation,
@@ -34,5 +37,14 @@ data class ReservationController(
         }
 
         return ResponseEntity(persistedReservation, HttpStatus.OK)
+    }
+
+    @DeleteMapping("/reservation/{reservationId}/cancel")
+    fun cancelReservation(
+        @RequestHeader(UserIdHeader) userId : UserUuid,
+        @PathVariable reservationId: Long,
+    ): ResponseEntity<Unit> {
+        reservationService.cancelReservation(reservationId)
+        return ResponseEntity(null, HttpStatus.OK)
     }
 }

@@ -6,9 +6,8 @@ import javax.persistence.*
 @Table(name = "affiliates")
 data class Affiliate(
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long,
-    @Column(name = "company_id")
     val companyId: Long,
     val name: String,
     val address: String,

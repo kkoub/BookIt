@@ -6,7 +6,7 @@ import javax.persistence.*
 @Table(name = "timeslots")
 data class TimeSlot(
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long,
     val start: Long,
     val end: Long,
